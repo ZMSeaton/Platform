@@ -25,6 +25,19 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::middleware(['auth:sanctum'])->group(function() {
+    Route::resource('posts', PostController::class);
+
+    Route::resource('clubs', ClubController::class);
+    
+    Route::resource('users', UserController::class);
+    
+    Route::resource('comments', CommentController::class);
+    
+    Route::post('/follow/{user}', [UserController::class, 'follow'])->name('follow');
+});
+
+/*
 Route::resource('posts', PostController::class)->middleware('auth');
 
 Route::resource('clubs', ClubController::class)->middleware('auth');
@@ -34,3 +47,4 @@ Route::resource('users', UserController::class)->middleware('auth');
 Route::resource('comments', CommentController::class)->middleware('auth');
 
 Route::post('/follow/{user}', [UserController::class, 'follow'])->name('follow')->middleware('auth');
+*/
