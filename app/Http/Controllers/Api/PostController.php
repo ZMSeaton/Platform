@@ -7,6 +7,8 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\PostResource;
+use App\Http\Resources\PostsResource;
 
 class PostController extends Controller
 {
@@ -23,7 +25,7 @@ class PostController extends Controller
             } 
         }
         //$posts = DB::table('posts')->join('users', 'users.id', '=', 'posts.user_id')->join('follows', 'users.id', '=', 'follows.followed')->where('follower', '=', Auth::user()->id);
-        return $posts;
+        return new PostsResource($posts);
     }
 
     /**
@@ -43,7 +45,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return $post;
+        return new PostResource($post);
     }
 
     /**
