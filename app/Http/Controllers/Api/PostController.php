@@ -15,16 +15,30 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $following = Auth::user()->following;
-        $posts = array();
-        foreach ($following as $follow) {
-            foreach ($follow->posts as $post){
-                array_push($posts, $post);
-            } 
-        }
-        //$posts = DB::table('posts')->join('users', 'users.id', '=', 'posts.user_id')->join('follows', 'users.id', '=', 'follows.followed')->where('follower', '=', Auth::user()->id);
+        // /*if ($request->input('page')){
+        //     $posts = Auth::user()->feed;
+        //     return new PostsResource($posts);
+        // }*/
+
+        // $following = Auth::user()->following;
+        // $posts = array();
+        // foreach ($following as $follow) {
+        //     foreach ($follow->posts as $post){
+        //         array_push($posts, $post);
+        //     } 
+        // }
+
+        // if ($request->input('sort')){
+            
+        // }
+
+        // //$posts = DB::table('posts')->join('users', 'users.id', '=', 'posts.user_id')->join('follows', 'users.id', '=', 'follows.followed')->where('follower', '=', Auth::user()->id);
+        // return new PostsResource($posts->paginate(4));
+
+        $following_ids = Auth::user()->following()->pluck('id');
+        $posts = Post::whereIn('user_id', $following_ids)->with('user')->paginate(4);
         return new PostsResource($posts);
     }
 

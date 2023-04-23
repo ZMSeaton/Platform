@@ -70,4 +70,24 @@ class User extends Authenticatable
         return !! $this->following()->where('followed', $user->id)->count();
     }
 
+    public function feed()
+    {
+        // $following = $this->following();
+        // $posts = array();
+        // foreach ($following as $follow) {
+        //     foreach ($follow->posts as $post){
+        //         array_push($posts, $post);
+        //     } 
+        // }
+        // return $posts;
+
+        // get ids of the users I'm following
+        $following_ids = $this->following()->pluck('id');
+        
+        // get posts from those users (we'll alter this in the future)
+        $posts = Post::whereIn('user_id', $following_ids)->with('user')->latest()->limit(10)->get();
+
+        return $posts;
+    }
+
 }
